@@ -1,0 +1,38 @@
+version: '3'
+services:
+    web:
+        build: .
+        image: forum-wechat
+        restart: always
+        ports:
+            - 5000:5000
+        volumes:
+            - ./app:/home/forum-wechat/app
+            - ./migrations:/home/forum-wechat/migrations
+        depends_on:
+            - mysql
+        container_name: forum-wechat
+    caddy:
+        image: kaiwk/caddy
+        restart: always
+        volumes:
+            - ./app:/root/forum-wechat/app
+            - ./docker/conf/caddy/Caddyfile:/etc/caddy/Caddyfile
+        depends_on:
+            - web
+        ports:
+            - 8080:8080
+        container_name: forum-webserver
+    mysql:
+        image: mysql:5.7
+        restart: always
+        volumes:
+          - ./data:/var/lib/mysql
+        ports:
+            - 3306:3306
+        env_file:
+          - .mysql-env
+        command: ['mysqld', '--max-connections=200',
+                            '--character-set-server=utf8mb4',
+                            '--collation-server=utf8mb4_unicode_ci']
+        container_name: forum-mysql

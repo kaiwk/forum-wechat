@@ -1,0 +1,7 @@
+localhost:8080 {
+    log /var/log/caddy/access.log
+    root /root/forum-wechat/app
+    proxy / web:5000 {
+        transparent
+    }
+}
