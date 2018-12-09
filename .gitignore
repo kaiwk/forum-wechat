@@ -107,3 +107,4 @@ data/
 instance/
 .mysql-env
 .dir-locals.el
+.idea/
