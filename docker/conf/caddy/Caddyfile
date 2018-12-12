@@ -1,4 +1,4 @@
-localhost:8080 {
+localhost:80 {
     log /var/log/caddy/access.log
     root /root/forum-wechat/app
     proxy / web:5000 {
