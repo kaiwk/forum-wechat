@@ -1,4 +1,4 @@
-localhost:80 {
+dont-be-evil.cn {
     log /var/log/caddy/access.log
     root /root/forum-wechat/app
     proxy / web:5000 {

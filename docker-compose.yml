@@ -16,12 +16,13 @@ services:
         image: kaiwk/caddy
         restart: always
         volumes:
-            - ./app:/root/forum-wechat/app
+            - ./:/root/forum-wechat/
             - ./docker/conf/caddy/Caddyfile:/etc/caddy/Caddyfile
         depends_on:
             - web
         ports:
             - 80:80
+            - 443:443
         container_name: forum-webserver
     mysql:
         image: mysql:5.7
