@@ -4,4 +4,8 @@ dont-be-evil.cn {
     proxy / web:5000 {
         transparent
     }
+
+    tls kaiwkx@foxmail.com {
+        ca https://acme-staging-v02.api.letsencrypt.org/directory
+    }
 }
