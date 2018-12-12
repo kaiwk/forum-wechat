@@ -9,11 +9,12 @@ flask = "*"
 flask-migrate = "*"
 requests = "*"
 mysqlclient = "*"
+pycryptodome = "*"
 
 [dev-packages]
-pylint = "==1.9.3"
 python-language-server = "*"
 pytest = "*"
+pylint = "*"
 
 [requires]
 python_version = "3.7"

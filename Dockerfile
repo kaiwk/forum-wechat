@@ -21,7 +21,8 @@ COPY migrations migrations
 COPY docker docker
 RUN chmod +x docker/boot.sh
 
-ENV FLASK_APP=app
+ENV FLASK_APP=app \
+    FLASK_ENV=product
 
 RUN mkdir -p /var/log/flask && chown -R forum-wechat:forum-wechat /var/log/flask
 RUN mkdir -p /var/log/gunicorn && chown -R forum-wechat:forum-wechat /var/log/gunicorn
