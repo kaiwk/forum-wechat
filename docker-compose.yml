@@ -21,7 +21,7 @@ services:
         depends_on:
             - web
         ports:
-            - 8080:8080
+            - 80:80
         container_name: forum-webserver
     mysql:
         image: mysql:5.7
