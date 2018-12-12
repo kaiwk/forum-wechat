@@ -105,6 +105,7 @@ venv.bak/
 
 data/
 instance/
-.mysql-env
-.dir-locals.el
 .idea/
+.mysql-env
+.webhook-github-env
+.dir-locals.el

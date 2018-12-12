@@ -5,17 +5,22 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 followings = db.Table('followings',
-                      db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-                      db.Column('following_id', db.Integer, db.ForeignKey('user.id'), primary_key=True))
+                      db.Column('user_id', db.Integer,
+                                db.ForeignKey('user.id'), primary_key=True),
+                      db.Column('following_id', db.Integer,
+                                db.ForeignKey('user.id'), primary_key=True))
 
 following_questions = db.Table('following_questions',
-                               db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-                               db.Column('question_id', db.Integer, db.ForeignKey('question.id'), primary_key=True))
+                               db.Column('user_id', db.Integer,
+                                         db.ForeignKey('user.id'), primary_key=True),
+                               db.Column('question_id', db.Integer,
+                                         db.ForeignKey('question.id'), primary_key=True))
 
 
 class CreateUpdateTimeMixin:
     created_on = db.Column(db.DateTime, server_default=db.func.now())
-    updated_on = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
+    updated_on = db.Column(db.DateTime, server_default=db.func.now(),
+                           server_onupdate=db.func.now())
 
 
 class User(db.Model, CreateUpdateTimeMixin):
@@ -28,7 +33,8 @@ class User(db.Model, CreateUpdateTimeMixin):
                                  primaryjoin=lambda: User.id == followings.c.user_id,
                                  secondaryjoin=lambda: User.id == followings.c.following_id,
                                  backref='followers')
-    following_questions = db.relationship('Question', secondary=following_questions, backref='followers')
+    following_questions = db.relationship('Question', secondary=following_questions,
+                                          backref='followers')
 
     def __repr__(self):
         return '<User:{}, openid:{}>'.format(self.id, self.open_id)

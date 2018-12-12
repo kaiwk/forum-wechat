@@ -7,11 +7,12 @@ name = "pypi"
 flask-sqlalchemy = "*"
 flask = "*"
 flask-migrate = "*"
+requests = "*"
 
 [dev-packages]
 pylint = "==1.9.3"
-pylint-flask = "*"
 python-language-server = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.7"
