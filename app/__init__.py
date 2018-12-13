@@ -29,7 +29,9 @@ def create_app(test_config=None):
     )
 
     if test_config is None:
-        if flask.config['ENV'] == 'development':
+        if flask.config['ENV'] == 'local-devel':
+            flask.config.from_object('instance.config.LocalDevelConfig')
+        elif flask.config['ENV'] == 'development':
             flask.config.from_object('instance.config.DevelConfig')
         else:
             flask.config.from_object('instance.config.ProductionConfig')

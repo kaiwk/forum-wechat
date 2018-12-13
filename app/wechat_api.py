@@ -2,7 +2,8 @@ import base64
 import json
 from Crypto.Cipher import AES
 
-class WXBizDataCrypt:
+
+class WXDataHandler:
 
     def __init__(self, app_id, session_key):
         self.app_id = app_id
@@ -25,9 +26,3 @@ class WXBizDataCrypt:
 
     def _unpad(self, s):
         return s[:-s[-1]]
-
-
-
-def wx_auth():
-
-    pass
