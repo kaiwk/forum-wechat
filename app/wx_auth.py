@@ -5,7 +5,6 @@ import time
 
 from flask import Blueprint, request, jsonify, current_app
 
-from app.wechat_api import WXDataHandler
 from . import get_logger
 
 
@@ -44,6 +43,7 @@ def create_token(open_id):
     }
     token = jwt.encode(payload, current_app.config['JWT_SECRET_KEY'], algorithm='HS256')
     return token
+
 
 def get_open_id(token):
     jwt.decode(token, current_app.config['JWT_SECRET_KEY'], algorithms='HS256')

@@ -25,7 +25,9 @@ class CreateUpdateTimeMixin:
 
 class User(db.Model, CreateUpdateTimeMixin):
     id = db.Column(db.Integer, primary_key=True)
-    open_id = db.Column(db.String(64))
+    open_id = db.Column(db.String(128), nullable=False)
+    avatar = db.Column(db.String(200))
+    nickname = db.Column(db.String(30))
     questions = db.relationship('Question', backref='owner')
     comments = db.relationship('Comment', backref='owner')
     answers = db.relationship('Answer', backref='owner')
@@ -34,7 +36,8 @@ class User(db.Model, CreateUpdateTimeMixin):
                                  secondaryjoin=(id == followings.c.following_id),
                                  backref=db.backref('followers', lazy='dynamic'), lazy='dynamic')
     following_questions = db.relationship('Question', secondary=following_questions,
-                                          backref='followers')
+                                          backref=db.backref('followers', lazy='dynamic'),
+                                          lazy='dynamic')
 
     def __init__(self, open_id):
         self.open_id = open_id
@@ -133,6 +136,7 @@ class Answer(db.Model, CreateUpdateTimeMixin):
 
 class Question(db.Model, CreateUpdateTimeMixin):
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(140), nullable=False)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     answers = db.relationship('Answer', backref='question')
