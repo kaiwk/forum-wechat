@@ -10,9 +10,7 @@ from app.database import User
 from . import get_logger
 
 
-bp = Blueprint('wx_auth', __name__,
-               static_folder='static',
-               template_folder='templates')
+bp = Blueprint('wx_auth', __name__)
 
 
 API_CODE2SESSION = 'https://api.weixin.qq.com/sns/jscode2session?appid={appid}&secret={secret}&js_code={jscode}&grant_type=authorization_code'

@@ -9,9 +9,7 @@ from . import get_logger
 log = get_logger()
 
 
-bp = Blueprint('answer', __name__,
-               static_folder='static',
-               template_folder='templates')
+bp = Blueprint('answer', __name__)
 
 
 @bp.route('/<int:answer_id>', methods=['GET'])

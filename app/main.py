@@ -1,13 +1,11 @@
 from flask import Blueprint
 
 
-bp = Blueprint('main', __name__,
-               static_folder='static',
-               template_folder='templates')
+bp = Blueprint('main', __name__)
 
 
 @bp.route('/')
 def hello():
-    return 'hello, world'
+    return 'Hello, World!'
 
 
