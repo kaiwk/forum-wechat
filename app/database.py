@@ -28,9 +28,10 @@ class User(db.Model, CreateUpdateTimeMixin):
     open_id = db.Column(db.String(128), nullable=False)
     avatar = db.Column(db.String(200))
     nickname = db.Column(db.String(30))
-    questions = db.relationship('Question', backref='owner')
-    comments = db.relationship('Comment', backref='owner')
-    answers = db.relationship('Answer', backref='owner')
+    self_intro = db.Column(db.String(200))
+    questions = db.relationship('Question', backref='owner', lazy='dynamic')
+    comments = db.relationship('Comment', backref='owner', lazy='dynamic')
+    answers = db.relationship('Answer', backref='owner', lazy='dynamic')
     followings = db.relationship('User', secondary=followings,
                                  primaryjoin=(id == followings.c.user_id),
                                  secondaryjoin=(id == followings.c.following_id),
@@ -39,15 +40,17 @@ class User(db.Model, CreateUpdateTimeMixin):
                                           backref=db.backref('followers', lazy='dynamic'),
                                           lazy='dynamic')
 
-    def __init__(self, open_id):
+    def __init__(self, open_id, avatar, nickname):
         self.open_id = open_id
+        self.avatar = avatar
+        self.nickname = nickname
 
     def __repr__(self):
         return '<User:{}, openid:{}>'.format(self.id, self.open_id)
 
     @staticmethod
-    def save(open_id):
-        user = User(open_id)
+    def save(open_id, avatar, nickname):
+        user = User(open_id, avatar, nickname)
         db.session.add(user)
         db.session.commit()
         return user
@@ -98,12 +101,14 @@ class Comment(db.Model, CreateUpdateTimeMixin):
 class Answer(db.Model, CreateUpdateTimeMixin):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
+    anonymous = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
-    comments = db.relationship('Comment', backref='answer')
+    comments = db.relationship('Comment', backref='answer', lazy='dynamic')
 
-    def __init__(self, content, user_id, question_id):
+    def __init__(self, content, anonymous, user_id, question_id):
         self.content = content
+        self.anonymous = anonymous
         self.user_id = user_id
         self.question_id = question_id
 
@@ -111,8 +116,8 @@ class Answer(db.Model, CreateUpdateTimeMixin):
         return '<Answer:{}>'.format(self.id)
 
     @staticmethod
-    def save(content, user_id, question_id):
-        answer = Answer(content, user_id, question_id)
+    def save(content, anonymous, user_id, question_id):
+        answer = Answer(content, anonymous, user_id, question_id)
         db.session.add(answer)
         db.session.commit()
         return answer
@@ -138,10 +143,12 @@ class Question(db.Model, CreateUpdateTimeMixin):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(140), nullable=False)
     content = db.Column(db.Text, nullable=False)
+    closed = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    answers = db.relationship('Answer', backref='question')
+    answers = db.relationship('Answer', backref='question', lazy='dynamic')
 
-    def __init__(self, content, user_id):
+    def __init__(self, title, content, user_id):
+        self.title = title
         self.content = content
         self.user_id = user_id
 
@@ -149,8 +156,8 @@ class Question(db.Model, CreateUpdateTimeMixin):
         return '<Question:{}>'.format(self.id)
 
     @staticmethod
-    def save(content, user_id):
-        question = Question(content, user_id)
+    def save(title, content, user_id):
+        question = Question(title, content, user_id)
         db.session.add(question)
         db.session.commit()
         return question
@@ -161,10 +168,13 @@ class Question(db.Model, CreateUpdateTimeMixin):
         db.session.delete(question)
         db.session.commit()
 
-    @staticmethod
-    def update(question_id, content):
-        question = Question.query.get(question_id)
-        question.content = content
+    def update(self, title=None, content=None, closed=None):
+        if title:
+            self.title = title
+        if content:
+            self.content = content
+        if closed:
+            self.closed = closed
         db.session.commit()
 
     def add_answer(self, answer):

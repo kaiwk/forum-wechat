@@ -11,6 +11,3 @@ def hello():
     return 'hello, world'
 
 
-@bp.route('/test')
-def test():
-    return 'test webhook'
