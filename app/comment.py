@@ -20,7 +20,7 @@ def create_comment():
     comment = Comment.save(content, user_id, answer_id)
 
     return jsonify({
-        'status': 200,
+        'status': 201,
         'code': 0,
         'msg': 'comment created',
         'comment': {
@@ -37,7 +37,7 @@ def get_comment(comment_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no comment found'
         })

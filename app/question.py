@@ -20,7 +20,7 @@ def get_question(question_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no question found'
         })
@@ -72,7 +72,7 @@ def update_question(question_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no question found'
         })
@@ -80,7 +80,7 @@ def update_question(question_id):
     question.update(title, content, closed)
 
     return jsonify({
-        'status': 200,
+        'status': 201,
         'code': 0,
         'msg': 'question updated'
     })
@@ -93,7 +93,7 @@ def get_answers(question_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no question found'
         })
@@ -120,7 +120,7 @@ def search_question():
         })
     else:
         return jsonify({
-            'status': 200,
+            'status': 204,
             'code': 1,
             'msg': 'no matched question'
         })
@@ -142,7 +142,7 @@ def get_questions(sort_type):
         questions = [q for q, c in questions]
     else:
         return jsonify({
-            'status': 201,
+            'status': 405,
             'code': 1,
             'msg': 'do not support sort type: {}'.format(sort_type)
         })

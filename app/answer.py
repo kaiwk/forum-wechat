@@ -19,7 +19,7 @@ def get_answer(answer_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no answer found'
         })
@@ -45,7 +45,7 @@ def get_comments(answer_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no answer found'
         })
@@ -68,7 +68,7 @@ def create_answer():
     answer = Answer.save(content, anonymous, user_id, question_id)
 
     return jsonify({
-        'status': 200,
+        'status': 201,
         'code': 0,
         'msg': 'answer created',
         'answer': {

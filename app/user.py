@@ -20,7 +20,7 @@ def get_user(user_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no user found'
         })
@@ -45,7 +45,7 @@ def follow_user(user_id, following_user_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no user found'
         })
@@ -55,13 +55,13 @@ def follow_user(user_id, following_user_id):
     except IntegrityError as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 409,
             'code': 2,
             'msg': 'user has been followed'
         })
 
     return jsonify({
-        'status': 200,
+        'status': 201,
         'code': 0,
         'msg': 'following success'
     })
@@ -74,7 +74,7 @@ def get_followings(user_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no user found'
         })
@@ -94,7 +94,7 @@ def follow_question(user_id, question_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no user found'
         })
@@ -104,7 +104,7 @@ def follow_question(user_id, question_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no question found'
         })
@@ -114,13 +114,13 @@ def follow_question(user_id, question_id):
     except IntegrityError as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 409,
             'code': 2,
             'msg': 'question has been followed'
         })
 
     return jsonify({
-        'status': 200,
+        'status': 201,
         'code': 0,
         'msg': 'follow question success'
     })
@@ -133,7 +133,7 @@ def get_questions(user_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no user found'
         })
@@ -153,7 +153,7 @@ def get_answers(user_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no user found'
         })
@@ -173,7 +173,7 @@ def get_comments(user_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no user found'
         })
@@ -192,7 +192,7 @@ def get_following_questions(user_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no user found'
         })
@@ -212,7 +212,7 @@ def get_following_questions_answers(user_id):
     except NoResultFound as e:
         log.error(e)
         return jsonify({
-            'status': 200,
+            'status': 404,
             'code': 1,
             'msg': 'no user found'
         })
