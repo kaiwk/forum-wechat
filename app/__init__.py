@@ -57,13 +57,14 @@ def create_app(test_config=None):
     database.init_app(fapp)
 
     # apply the blueprints to the app
-    from app import main, wx_auth, user, question, answer, comment
+    from app import main, wx_auth, user, question, answer, comment, page
     fapp.register_blueprint(main.bp, url_prefix='/')
     fapp.register_blueprint(wx_auth.bp, url_prefix='/auth')
     fapp.register_blueprint(user.bp, url_prefix='/user')
     fapp.register_blueprint(question.bp, url_prefix='/question')
     fapp.register_blueprint(answer.bp, url_prefix='/answer')
     fapp.register_blueprint(comment.bp, url_prefix='/comment')
+    fapp.register_blueprint(page.bp, url_prefix='/page')
 
     # admin
     # set optional bootswatch theme

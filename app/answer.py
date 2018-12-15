@@ -54,7 +54,7 @@ def get_comments(answer_id):
         'status': 200,
         'code': 0,
         'msg': "get success",
-        'data': answer.comments.all()
+        'data': [a.as_dict() for a in answer.comments.all()]
     })
 
 

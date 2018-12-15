@@ -72,8 +72,16 @@ class User(db.Model, CreateUpdateTimeMixin, DictSerializable):
         self.followings.append(user)
         db.session.commit()
 
+    def unfollow(self, user):
+        self.followings.remove(user)
+        db.session.commit()
+
     def follow_question(self, question):
         self.following_questions.append(question)
+        db.session.commit()
+
+    def unfollow_question(self, question):
+        self.following_questions.remove(question)
         db.session.commit()
 
 

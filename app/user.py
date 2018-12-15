@@ -37,11 +37,11 @@ def get_user(user_id):
     })
 
 
-@bp.route('/<int:user_id>/user/<int:following_user_id>', methods=['PUT'])
-def follow_user(user_id, following_user_id):
+@bp.route('/<int:user_id>/follow/<int:following_id>', methods=['PUT'])
+def follow_user(user_id, following_id):
     try:
         user = User.query.get(user_id)
-        following_user = User.query.get(following_user_id)
+        following_user = User.query.get(following_id)
     except NoResultFound as e:
         log.error(e)
         return jsonify({
@@ -67,6 +67,36 @@ def follow_user(user_id, following_user_id):
     })
 
 
+@bp.route('/<int:user_id>/unfollow/<int:following_id>', methods=['PUT'])
+def unfollow_user(user_id, following_id):
+    try:
+        user = User.query.get(user_id)
+        following_user = User.query.get(following_id)
+    except NoResultFound as e:
+        log.error(e)
+        return jsonify({
+            'status': 404,
+            'code': 1,
+            'msg': 'no user found'
+        })
+
+    try:
+        user.unfollow(following_user)
+    except IntegrityError as e:
+        log.error(e)
+        return jsonify({
+            'status': 409,
+            'code': 2,
+            'msg': 'this user has not been followed'
+        })
+
+    return jsonify({
+        'status': 201,
+        'code': 0,
+        'msg': 'unfollow success'
+    })
+
+
 @bp.route('/<int:user_id>/followings', methods=['GET'])
 def get_followings(user_id):
     try:
@@ -87,7 +117,7 @@ def get_followings(user_id):
     })
 
 
-@bp.route('/<int:user_id>/question/<int:question_id>', methods=['PUT'])
+@bp.route('/<int:user_id>/follow_question/<int:question_id>', methods=['PUT'])
 def follow_question(user_id, question_id):
     try:
         user = User.query.get(user_id)
@@ -117,6 +147,45 @@ def follow_question(user_id, question_id):
             'status': 409,
             'code': 2,
             'msg': 'question has been followed'
+        })
+
+    return jsonify({
+        'status': 201,
+        'code': 0,
+        'msg': 'follow question success'
+    })
+
+
+@bp.route('/<int:user_id>/unfollow_question/<int:question_id>', methods=['PUT'])
+def unfollow_question(user_id, question_id):
+    try:
+        user = User.query.get(user_id)
+    except NoResultFound as e:
+        log.error(e)
+        return jsonify({
+            'status': 404,
+            'code': 1,
+            'msg': 'no user found'
+        })
+
+    try:
+        question = Question.query.get(question_id)
+    except NoResultFound as e:
+        log.error(e)
+        return jsonify({
+            'status': 404,
+            'code': 1,
+            'msg': 'no question found'
+        })
+
+    try:
+        user.unfollow_question(question)
+    except IntegrityError as e:
+        log.error(e)
+        return jsonify({
+            'status': 409,
+            'code': 2,
+            'msg': 'this question has not been followed'
         })
 
     return jsonify({
@@ -201,7 +270,7 @@ def get_following_questions(user_id):
         'status': 200,
         'code': 0,
         'msg': 'get success',
-        'data': user.following_questions.all()
+        'data': [q.as_dict() for q in user.following_questions.all()]
     })
 
 
