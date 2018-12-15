@@ -15,7 +15,6 @@ class AuthException(HTTPException):
         ))
 
 
-
 def create_app(test_config=None):
     """
     Create and configure an instance of the Flask application.
@@ -75,7 +74,6 @@ def create_app(test_config=None):
     # basic auth
     from flask_basicauth import BasicAuth
     basic_auth = BasicAuth(fapp)
-    basic_auth.init_app(fapp)
 
     class ModelView(sqla.ModelView):
         def is_accessible(self):
