@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify
 
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import IntegrityError
 
-from app.database import User, Question
+from app.database import User, Question, Answer
 from . import get_logger
 
 
@@ -38,7 +39,7 @@ def get_user(user_id):
     })
 
 
-@bp.route('/<int:user_id>/<int:following_user_id>', methods=['PUT'])
+@bp.route('/<int:user_id>/user/<int:following_user_id>', methods=['PUT'])
 def follow_user(user_id, following_user_id):
     try:
         user = User.query.get(user_id)
@@ -51,7 +52,15 @@ def follow_user(user_id, following_user_id):
             'msg': 'no user found'
         })
 
-    user.follow(following_user)
+    try:
+        user.follow(following_user)
+    except IntegrityError as e:
+        log.error(e)
+        return jsonify({
+            'status': 200,
+            'code': 2,
+            'msg': 'user has been followed'
+        })
 
     return jsonify({
         'status': 200,
@@ -76,11 +85,11 @@ def get_followings(user_id):
         'status': 200,
         'code': 0,
         'msg': 'get success',
-        'data': user.followings.all()
+        'data': [u.as_dict() for u in user.followings.all()]
     })
 
 
-@bp.route('/<int:user_id>/<int:question_id>', methods=['GET'])
+@bp.route('/<int:user_id>/question/<int:question_id>', methods=['PUT'])
 def follow_question(user_id, question_id):
     try:
         user = User.query.get(user_id)
@@ -102,7 +111,15 @@ def follow_question(user_id, question_id):
             'msg': 'no question found'
         })
 
-    user.follow_question(question)
+    try:
+        user.follow_question(question)
+    except IntegrityError as e:
+        log.error(e)
+        return jsonify({
+            'status': 200,
+            'code': 2,
+            'msg': 'question has been followed'
+        })
 
     return jsonify({
         'status': 200,
@@ -147,7 +164,7 @@ def get_answers(user_id):
         'status': 200,
         'code': 0,
         'msg': 'get success',
-        'data': user.answers.all()
+        'data': [a.as_dict() for a in user.answers.all()]
     })
 
 
@@ -166,7 +183,7 @@ def get_comments(user_id):
         'status': 200,
         'code': 0,
         'msg': 'get success',
-        'data': user.comments.all()
+        'data': [c.as_dict() for c in user.comments.all()]
     })
 
 
@@ -187,4 +204,31 @@ def get_following_questions(user_id):
         'code': 0,
         'msg': 'get success',
         'data': user.following_questions.all()
+    })
+
+
+@bp.route('/<int:user_id>/following_questions/answers', methods=['GET'])
+def get_following_questions_answers(user_id):
+    try:
+        user = User.query.get(user_id)
+    except NoResultFound as e:
+        log.error(e)
+        return jsonify({
+            'status': 200,
+            'code': 1,
+            'msg': 'no user found'
+        })
+
+    flw_qst_ans = []
+    answers = Answer.query.all()
+
+    for a in answers:
+        if a.question in user.following_questions:
+            flw_qst_ans.append(a)
+
+    return jsonify({
+        'status': 200,
+        'code': 0,
+        'msg': 'get success',
+        'data': [a.as_dict() for a in flw_qst_ans]
     })

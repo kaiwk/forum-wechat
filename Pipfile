@@ -11,6 +11,8 @@ requests = "*"
 mysqlclient = "*"
 pycryptodome = "*"
 pyjwt = "*"
+flask-admin = "*"
+flask-basicauth = "*"
 
 [dev-packages]
 python-language-server = "*"

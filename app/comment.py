@@ -50,7 +50,7 @@ def get_comment(comment_id):
         'msg': 'get success',
         'comment': {
             'id': comment.id,
-            'owner_id': comment.user_id,
+            'user_id': comment.user_id,
             'answer_id': comment.answer_id,
             'content': comment.content
         }

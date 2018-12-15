@@ -32,7 +32,7 @@ def get_answer(answer_id):
         'msg': 'get success',
         'answer': {
             'id': answer.id,
-            'owner_id': answer.user_id,
+            'user_id': answer.user_id,
             'question_id': answer.question_id,
             'content': answer.content,
             'anonymous': answer.anonymous
@@ -60,7 +60,7 @@ def get_comments(answer_id):
     })
 
 
-@bp.route('/', method=['POST'])
+@bp.route('/', methods=['POST'])
 def create_answer():
     user_id = request.json['user_id']
     question_id = request.json['question_id']

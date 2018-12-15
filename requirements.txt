@@ -3,6 +3,8 @@ alembic==1.0.5
 certifi==2018.11.29
 chardet==3.0.4
 click==7.0
+flask-admin==1.5.2
+flask-basicauth==0.2.0
 flask-migrate==2.3.1
 flask-sqlalchemy==2.3.2
 flask==1.0.2
@@ -21,3 +23,4 @@ six==1.12.0
 sqlalchemy==1.2.15
 urllib3==1.24.1
 werkzeug==0.14.1
+wtforms==2.2.1

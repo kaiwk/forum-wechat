@@ -1,3 +1,5 @@
+import datetime
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -23,7 +25,18 @@ class CreateUpdateTimeMixin:
                            server_onupdate=db.func.now())
 
 
-class User(db.Model, CreateUpdateTimeMixin):
+class DictSerializable:
+    def as_dict(self):
+        result = dict()
+        for key in self.__mapper__.c.keys():
+            val = getattr(self, key)
+            if type(val) == datetime.datetime:
+                val = str(val)
+            result[key] = val
+        return result
+
+
+class User(db.Model, CreateUpdateTimeMixin, DictSerializable):
     id = db.Column(db.Integer, primary_key=True)
     open_id = db.Column(db.String(128), nullable=False)
     avatar = db.Column(db.String(200))
@@ -64,7 +77,7 @@ class User(db.Model, CreateUpdateTimeMixin):
         db.session.commit()
 
 
-class Comment(db.Model, CreateUpdateTimeMixin):
+class Comment(db.Model, CreateUpdateTimeMixin, DictSerializable):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -98,7 +111,7 @@ class Comment(db.Model, CreateUpdateTimeMixin):
         db.session.commit()
 
 
-class Answer(db.Model, CreateUpdateTimeMixin):
+class Answer(db.Model, CreateUpdateTimeMixin, DictSerializable):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
     anonymous = db.Column(db.Boolean, default=False)
@@ -139,7 +152,7 @@ class Answer(db.Model, CreateUpdateTimeMixin):
         db.session.commit()
 
 
-class Question(db.Model, CreateUpdateTimeMixin):
+class Question(db.Model, CreateUpdateTimeMixin, DictSerializable):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(140), nullable=False)
     content = db.Column(db.Text, nullable=False)
