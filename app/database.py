@@ -100,8 +100,8 @@ class Comment(db.Model, CreateUpdateTimeMixin, DictSerializable):
         self.answer_id = answser_id
 
     @staticmethod
-    def save(content, user_id, answser_id):
-        comment = Comment(content, user_id, answser_id)
+    def save(content, user_id, answer_id):
+        comment = Comment(content, user_id, answer_id)
         db.session.add(comment)
         db.session.commit()
         return comment

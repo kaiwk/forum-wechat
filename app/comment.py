@@ -17,6 +17,7 @@ def create_comment():
     user_id = request.json['user_id']
     answer_id = request.json['answer_id']
     content = request.json['content']
+
     comment = Comment.save(content, user_id, answer_id)
 
     return jsonify({
