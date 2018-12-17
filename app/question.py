@@ -101,13 +101,14 @@ def get_answers(question_id):
         'status': 200,
         'code': 0,
         'msg': 'get success',
-        'data': question.answers.all()
+        'data': [q.as_dict() for q in question.answers.all()]
     })
 
 
-@bp.route('/', methods=['GET'])
+@bp.route('/search', methods=['GET'])
 def search_question():
-    fuzzy_match = request.json['fuzzy_match']
+
+    fuzzy_match = request.args.get('fuzzy_match')
 
     questions = Question.query.filter(Question.content.contains(fuzzy_match)).all()
 

@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, request
 
+from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
 
-from app.database import User, Answer, Comment
+from app.database import User, Answer, Question
 from . import get_logger
 
 
@@ -12,7 +13,7 @@ log = get_logger()
 bp = Blueprint('page', __name__)
 
 
-@bp.route('/following_questions_update/user/<int:user_id>/', methods=['GET'])
+@bp.route('/following_questions_update/user/<int:user_id>', methods=['GET'])
 def following_questions_answers(user_id):
     try:
         user = User.query.get(user_id)
@@ -44,10 +45,10 @@ def following_questions_answers(user_id):
     })
 
 
-@bp.route('/comment_list', methods=['GET'])
+@bp.route('/comment_list/', methods=['GET'])
 def get_comments():
 
-    answer_id = request.json['answer_id']
+    answer_id = request.args.get('answer_id')
 
     try:
         answer = Answer.query.get(answer_id)
@@ -70,5 +71,27 @@ def get_comments():
         'status': 200,
         'code': 0,
         'msg': "get success",
+        'data': data_list
+    })
+
+
+@bp.route('/index/', methods=['GET'])
+def index():
+    questions = Question.query.order_by(func.rand()).all()
+
+    data_list = []
+    for q in questions:
+        answer = q.answers.first()
+        if answer:
+            d = q.as_dict()
+            d['answer_id'] = answer.id
+            d['answer_content'] = answer.content
+            d['answer_user_id'] = answer.user_id
+            data_list.append(d)
+
+    return jsonify({
+        'status': 200,
+        'code': 0,
+        'msg': 'get success',
         'data': data_list
     })
