@@ -53,7 +53,7 @@ class User(db.Model, CreateUpdateTimeMixin, DictSerializable):
                                           backref=db.backref('followers', lazy='dynamic'),
                                           lazy='dynamic')
 
-    def __init__(self, open_id, avatar, nickname):
+    def __init__(self, open_id='', avatar='', nickname=''):
         self.open_id = open_id
         self.avatar = avatar
         self.nickname = nickname
@@ -94,7 +94,7 @@ class Comment(db.Model, CreateUpdateTimeMixin, DictSerializable):
     def __repr__(self):
         return '<Comment:{}>'.format(self.id)
 
-    def __init__(self, content, user_id, answser_id):
+    def __init__(self, content='', user_id=0, answser_id=0):
         self.content = content
         self.user_id = user_id
         self.answer_id = answser_id
@@ -127,7 +127,7 @@ class Answer(db.Model, CreateUpdateTimeMixin, DictSerializable):
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
     comments = db.relationship('Comment', backref='answer', lazy='dynamic')
 
-    def __init__(self, content, anonymous, user_id, question_id):
+    def __init__(self, content='', anonymous=False, user_id=0, question_id=0):
         self.content = content
         self.anonymous = anonymous
         self.user_id = user_id
@@ -168,7 +168,7 @@ class Question(db.Model, CreateUpdateTimeMixin, DictSerializable):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     answers = db.relationship('Answer', backref='question', lazy='dynamic')
 
-    def __init__(self, title, content, user_id):
+    def __init__(self, title='', content='', user_id=0):
         self.title = title
         self.content = content
         self.user_id = user_id

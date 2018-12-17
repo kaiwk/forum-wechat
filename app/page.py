@@ -1,8 +1,8 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
 from sqlalchemy.orm.exc import NoResultFound
 
-from app.database import User, Answer
+from app.database import User, Answer, Comment
 from . import get_logger
 
 
@@ -40,5 +40,35 @@ def following_questions_answers(user_id):
         'status': 200,
         'code': 0,
         'msg': 'get success',
+        'data': data_list
+    })
+
+
+@bp.route('/comment_list', methods=['GET'])
+def get_comments():
+
+    answer_id = request.json['answer_id']
+
+    try:
+        answer = Answer.query.get(answer_id)
+    except NoResultFound as e:
+        log.error(e)
+        return jsonify({
+            'status': 404,
+            'code': 1,
+            'msg': 'no answer found'
+        })
+
+    data_list = []
+
+    for a in answer.comments.all():
+        d = a.as_dict()
+        d['nickname'] = User.query.get(a.user_id).nickname
+        data_list.append(d)
+
+    return jsonify({
+        'status': 200,
+        'code': 0,
+        'msg': "get success",
         'data': data_list
     })
