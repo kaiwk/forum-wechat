@@ -211,7 +211,7 @@ def get_questions(user_id):
         'status': 200,
         'code': 0,
         'msg': 'get success',
-        'data': user.questions.all()
+        'data': [q.as_dict() for q in user.questions.all()]
     })
 
 

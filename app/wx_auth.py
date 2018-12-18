@@ -21,17 +21,17 @@ log = get_logger()
 
 @bp.route('/')
 def wechat_auth():
-    auth_code = request.json['auth_code']
-    avatar = request.json['avatar']
-    nickname = request.json['nickname']
+    auth_code = request.args.get('auth_code')
+    avatar = request.args.get('avatar')
+    nickname = request.args.get('nickname')
 
     log.debug('auth_code: %s', auth_code)
     wx_auth_url = API_CODE2SESSION.format(appid=current_app.config['WECHAT_APP_ID'],
                                           secret=current_app.config['WECHAT_SECRET_KEY'],
                                           jscode=auth_code)
     res = requests.get(wx_auth_url).json()
-    open_id = res['open_id']
-
+    open_id = res['openid']
+    log.debug('open_id: %s', open_id)
     try:
         user = User.query.filter_by(open_id=open_id).one()
         log.info('User<%s> already exists', open_id)

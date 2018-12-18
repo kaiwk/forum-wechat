@@ -87,6 +87,7 @@ def index():
             d['answer_id'] = answer.id
             d['answer_content'] = answer.content
             d['answer_user_id'] = answer.user_id
+            d['nickname'] = User.query.get(answer.user_id).nickname
             data_list.append(d)
 
     return jsonify({
