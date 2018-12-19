@@ -32,8 +32,10 @@ def following_questions_answers(user_id):
         if a.question in user.following_questions:
             # add question data
             d = a.as_dict()
+            u = User.query.get(a.user_id)
             d['question_title'] = a.question.title
-            d['nickname'] = User.query.get(a.user_id).nickname
+            d['nickname'] = u.nickname
+            d['avatar'] = u.avatar
             d['answer_count'] = a.question.answers.count()
             data_list.append(d)
 
@@ -64,7 +66,9 @@ def get_comments():
 
     for a in answer.comments.all():
         d = a.as_dict()
-        d['nickname'] = User.query.get(a.user_id).nickname
+        u = User.query.get(a.user_id)
+        d['nickname'] = u.nickname
+        d['avatar'] = u.avatar
         data_list.append(d)
 
     return jsonify({
@@ -84,10 +88,12 @@ def index():
         answer = q.answers.first()
         if answer:
             d = q.as_dict()
+            u = User.query.get(answer.user_id)
             d['answer_id'] = answer.id
             d['answer_content'] = answer.content
             d['answer_user_id'] = answer.user_id
-            d['nickname'] = User.query.get(answer.user_id).nickname
+            d['nickname'] = u.nickname
+            d['avatar'] = u.avatar
             data_list.append(d)
 
     return jsonify({
