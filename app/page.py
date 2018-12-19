@@ -102,3 +102,32 @@ def index():
         'msg': 'get success',
         'data': data_list
     })
+
+
+@bp.route('/answer_list/question', methods=['GET'])
+def answer_list():
+    question_id = request.args.get('question_id')
+    try:
+        question = Question.query.get(question_id)
+    except NoResultFound as e:
+        log.error(e)
+        return jsonify({
+            'status': 404,
+            'code': 1,
+            'msg': 'no question found'
+        })
+
+    data_list = []
+    for a in question.answers.all():
+        d = a.as_dict()
+        u = User.query.get(a.user_id)
+        d['nickname'] = u.nickname
+        data_list.append(d)
+
+    return jsonify({
+        'status': 200,
+        'code': 0,
+        'msg': 'get success',
+        'data': data_list
+    })
+

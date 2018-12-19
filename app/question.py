@@ -101,7 +101,7 @@ def get_answers(question_id):
         'status': 200,
         'code': 0,
         'msg': 'get success',
-        'data': [q.as_dict() for q in question.answers.all()]
+        'data': [a.as_dict() for a in question.answers.all()]
     })
 
 
