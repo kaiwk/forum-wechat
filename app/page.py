@@ -104,7 +104,7 @@ def index():
     })
 
 
-@bp.route('/answer_list/question', methods=['GET'])
+@bp.route('/answer_list', methods=['GET'])
 def answer_list():
     question_id = request.args.get('question_id')
     try:
